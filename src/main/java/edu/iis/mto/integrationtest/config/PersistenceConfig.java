@@ -4,6 +4,8 @@ import java.sql.Driver;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import edu.iis.mto.integrationtest.main.ApplicationMain;
 import edu.iis.mto.integrationtest.utils.ModeUtils;
 
 @Configuration
@@ -29,6 +32,9 @@ import edu.iis.mto.integrationtest.utils.ModeUtils;
 @EnableJpaRepositories(basePackages = { "edu.iis.mto.integrationtest.repository" })
 // okreœla gdzie szukaæ klas definiuj¹cych repozytoria Spring Data.
 public class PersistenceConfig {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ApplicationMain.class);
 
 	private final String SQL_SCHEMA_SCRIPT_PATH = "sql/schema-script.sql";
 	private final String SQL_FOLDER_NAME = "sql/";
@@ -80,14 +86,11 @@ public class PersistenceConfig {
 			if (Driver.class.isAssignableFrom(driverClass)) {
 				return (Class<? extends Driver>) driverClass;
 			} else {
-				System.out
-						.println("database driver class is not the SQL driver ");
-				// LOGGER.error("database driver class is not the SQL driver ");
+				LOGGER.error("database driver class is not the SQL driver ");
 				return null;
 			}
 		} catch (ClassNotFoundException e) {
-			System.out.println("database driver class not found" + e);
-			// LOGGER.error("database driver class not found", e);
+			LOGGER.error("database driver class not found", e);
 			return null;
 		}
 	}
