@@ -55,6 +55,12 @@ public class PersonRepositoryIntegrationTest extends IntegrationTest {
 		assertEquals(2, personRepository.count());
 	}
 
+	@Test
+	public void testFindPeopleByNameLike() {
+		List<Person> people = personRepository.findByFirstNameLike("Mari%");
+		assertEquals(2, people.size());
+	}
+
 	private Person a(PersonBuilder builder) {
 		return builder.build();
 	}
